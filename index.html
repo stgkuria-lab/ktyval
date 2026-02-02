@@ -1,161 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Will You Be My Valentine? 💖</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: radial-gradient(circle at top, #ff758c, #ff7eb3);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      overflow: hidden;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Will You Be My Valentine? 💜</title>
 
-    .card {
-      background: white;
-      padding: 40px;
-      border-radius: 25px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-      text-align: center;
-      max-width: 420px;
-      width: 90%;
-      position: relative;
-      animation: popIn 1s ease;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #ff758c, #ff7eb3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
 
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 25px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  animation: popIn 1s ease;
+  position: relative;
+  z-index: 10;
+}
 
-    h1 {
-      color: #e63946;
-      margin-bottom: 10px;
-    }
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
 
-    p {
-      color: #555;
-      margin-bottom: 30px;
-    }
+h1 { color: #e63946; }
+p { color: #555; margin-bottom: 30px; }
 
-    .buttons {
-      position: relative;
-      height: 100px;
-    }
+.buttons {
+  position: relative;
+  height: 120px;
+}
 
-    button {
-      padding: 14px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+button {
+  padding: 14px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+}
 
-    #yesBtn {
-      background-color: #e63946;
-      color: white;
-      box-shadow: 0 10px 20px rgba(230, 57, 70, 0.4);
-    }
+#yesBtn {
+  background: #e63946;
+  color: white;
+}
 
-    #yesBtn:hover {
-      transform: scale(1.1);
-    }
+#noBtn {
+  background: #eee;
+  position: absolute;
+  left: 55%;
+}
 
-    #noBtn {
-      background-color: #f1f1f1;
-      color: #333;
-      position: absolute;
-      left: 55%;
-      top: 0;
-    }
+.message {
+  display: none;
+  font-size: 22px;
+  color: #e63946;
+  margin-top: 20px;
+}
 
-    .message {
-      display: none;
-      margin-top: 20px;
-      font-size: 22px;
-      color: #e63946;
-    }
+/* Hearts & Confetti */
+.heart, .confetti {
+  position: absolute;
+  z-index: 9999;
+  animation: floatUp 4s linear forwards;
+}
 
-    .heart {
-      position: absolute;
-      font-size: 20px;
-      animation: floatUp 4s linear forwards;
-    }
-
-    @keyframes floatUp {
-      from { transform: translateY(0); opacity: 1; }
-      to { transform: translateY(-600px); opacity: 0; }
-    }
-  </style>
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-700px); opacity: 0; }
+}
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <h1 id="question">Kitty, Will you be my Valentine? 💕</h1>
-    <p id="subtitle">You'd make my world brighter ❤️</p>
+<div class="card">
+  <h1 id="question">Kitty, will you be my Valentine? 💕</h1>
+  <p id="subtitle">You’d make my world brighter 💜</p>
 
-    <div class="buttons">
-      <button id="yesBtn">Yes 💖</button>
-      <button id="noBtn">No 🙈</button>
-    </div>
-
-    <div class="message" id="message">Yay! I knew you'd say yes! 💘🥰</div>
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 🙈</button>
   </div>
 
-  <script>
-    const noBtn = document.getElementById('noBtn');
-    const yesBtn = document.getElementById('yesBtn');
-    const message = document.getElementById('message');
-    const question = document.getElementById('question');
-    const subtitle = document.getElementById('subtitle');
+  <div class="message" id="message">
+    Yay! You’re my Valentine 💘🥰
+  </div>
+</div>
 
-    let noCount = 0;
+<audio id="loveSound">
+  <source src="https://www.soundjay.com/human/kiss-01.mp3" type="audio/mpeg">
+</audio>
 
-    noBtn.addEventListener('mouseover', () => {
-      noCount++;
-      const x = Math.random() * 300 - 150;
-      const y = Math.random() * 150 - 75;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+<script>
+document.documentElement.requestFullscreen?.().catch(()=>{});
 
-      if (noCount === 3) subtitle.textContent = "Hey... that's not nice 😢";
-      if (noCount === 5) subtitle.textContent = "You can't escape destiny 😏";
-      if (noCount === 7) subtitle.textContent = "Just say yes already 😍";
-    });
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const message = document.getElementById("message");
+const question = document.getElementById("question");
+const subtitle = document.getElementById("subtitle");
+const sound = document.getElementById("loveSound");
 
-    yesBtn.addEventListener("click", () => {
+let noCount = 0;
+
+function escapeNo() {
+  noCount++;
+
+  const x = Math.random() * (window.innerWidth - 150);
+  const y = Math.random() * (window.innerHeight - 100);
+
+  noBtn.style.position = "fixed";
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+
+  navigator.vibrate?.(80);
+
+  if (noCount === 3) subtitle.textContent = "Hey… that’s mean 😢";
+  if (noCount === 5) subtitle.textContent = "You can’t escape destiny 😏";
+  if (noCount === 7) subtitle.textContent = "Just say YES already 😍";
+}
+
+noBtn.addEventListener("mouseover", escapeNo);
+noBtn.addEventListener("click", escapeNo);
+noBtn.addEventListener("touchstart", escapeNo);
+
+yesBtn.addEventListener("click", () => {
+  navigator.vibrate?.([100,50,100]);
+  sound.play();
+
   question.textContent = "You’re my Valentine 💞";
   subtitle.style.display = "none";
   yesBtn.style.display = "none";
   noBtn.style.display = "none";
   message.style.display = "block";
 
-  for (let i = 0; i < 25; i++) createHeart();
+  for (let i = 0; i < 30; i++) {
+    createHeart();
+    createConfetti();
+  }
 
-  // WhatsApp redirect after short delay
   setTimeout(() => {
-    const phoneNumber = "254719480090";
-    const text = encodeURIComponent("Hey Pookie❤️ I just clicked YES! 💖🥰");
-    window.open(`https://wa.me/${phoneNumber}?text=${text}`, "_blank");
-  }, 1500);
+    const phone = "254719480090";
+    const text = encodeURIComponent(
+      "Hey Pookie ❤️ I clicked YES 😘💖"
+    );
+    window.location.href = `https://wa.me/${phone}?text=${text}`;
+  }, 1800);
 });
 
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.textContent = '❤️';
-      heart.style.left = Math.random() * window.innerWidth + 'px';
-      heart.style.bottom = '0px';
-      heart.style.fontSize = Math.random() * 20 + 15 + 'px';
-      document.body.appendChild(heart);
+function createHeart() {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = "❤️";
+  h.style.left = Math.random() * window.innerWidth + "px";
+  h.style.bottom = "0px";
+  h.style.fontSize = Math.random() * 25 + 15 + "px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 4000);
+}
 
-      setTimeout(() => heart.remove(), 4000);
-    }
-  </script>
+function createConfetti() {
+  const c = document.createElement("div");
+  c.className = "confetti";
+  c.textContent = "💜";
+  c.style.left = Math.random() * window.innerWidth + "px";
+  c.style.bottom = "0px";
+  c.style.fontSize = Math.random() * 20 + 10 + "px";
+  document.body.appendChild(c);
+  setTimeout(() => c.remove(), 4000);
+}
+</script>
 </body>
 </html>
-
