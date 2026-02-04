@@ -109,29 +109,30 @@ button {
 </div>
 
 <audio id="loveSound" preload="auto">
-  <source src="easy.mp3" type="audio/mpeg">
+  <source src="easy.mp3" type="audio/mpeg" />
 </audio>
 
 <script>
 (function () {
-  var noBtn = document.getElementById("noBtn");
-  var yesBtn = document.getElementById("yesBtn");
-  var message = document.getElementById("message");
-  var question = document.getElementById("question");
-  var subtitle = document.getElementById("subtitle");
-  var sound = document.getElementById("loveSound");
-  var continueBtn = document.getElementById("continueBtn");
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const message = document.getElementById("message");
+  const question = document.getElementById("question");
+  const subtitle = document.getElementById("subtitle");
+  const sound = document.getElementById("loveSound");
+  const continueBtn = document.getElementById("continueBtn");
 
-  var noCount = 0;
-  var audioPrimed = false;
+  let noCount = 0;
+  let audioPrimed = false;
 
+  // Prime audio on first user interaction (for autoplay policy)
   function primeAudio() {
     if (audioPrimed) return;
     audioPrimed = true;
-    sound.play().then(function () {
+    sound.play().then(() => {
       sound.pause();
       sound.currentTime = 0;
-    }).catch(function () {});
+    }).catch(() => {});
     document.removeEventListener("touchstart", primeAudio);
     document.removeEventListener("click", primeAudio);
   }
@@ -139,18 +140,16 @@ button {
   document.addEventListener("touchstart", primeAudio);
   document.addEventListener("click", primeAudio);
 
+  // Move the NO button randomly
   function moveNoButton() {
-    noCount += 1;
-
-    var maxX = window.innerWidth - noBtn.offsetWidth - 20;
-    var maxY = window.innerHeight - noBtn.offsetHeight - 20;
-
-    var x = Math.random() * maxX;
-    var y = Math.random() * maxY;
-
+    noCount++;
+    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
     noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.left = `${x}px`;
+    noBtn.style.top = `${y}px`;
 
     if (noCount === 3) subtitle.textContent = "Hey… that’s mean 😢";
     if (noCount === 5) subtitle.textContent = "You can’t escape destiny 😏";
@@ -171,9 +170,9 @@ button {
       encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
   }
 
-  yesBtn.addEventListener("click", function () {
+  yesBtn.addEventListener("click", () => {
     sound.currentTime = 0;
-    sound.play().catch(function () {});
+    sound.play().catch(() => {});
 
     question.textContent = "You’re my Valentine 💞";
     subtitle.style.display = "none";
@@ -181,34 +180,24 @@ button {
     noBtn.style.display = "none";
     message.style.display = "block";
 
-    for (var i = 0; i < 25; i += 1) {
+    for (let i = 0; i < 25; i++) {
       createEmoji("❤️", "heart");
       createEmoji("💜", "confetti");
     }
 
+    // Show Continue button for iOS Safari because auto redirect can be blocked
     if (isIosSafari()) {
       continueBtn.style.display = "inline-block";
       continueBtn.onclick = redirectToWhatsApp;
     } else {
-      var redirected = false;
-      sound.onended = function () {
-        if (!redirected) {
-          redirected = true;
-          redirectToWhatsApp();
-        }
-      };
-      var durationMs = (sound.duration && !isNaN(sound.duration)) ? (sound.duration * 1000) : 6000;
-      setTimeout(function () {
-        if (!redirected) {
-          redirected = true;
-          redirectToWhatsApp();
-        }
-      }, durationMs + 1000);
+      // Other browsers: redirect only after audio ended
+      continueBtn.style.display = "none"; // hide continue for non iOS Safari
+      sound.onended = redirectToWhatsApp;
     }
   });
 
   function createEmoji(symbol, className) {
-    var el = document.createElement("div");
+    const el = document.createElement("div");
     el.className = className;
     el.textContent = symbol;
     el.style.left = Math.random() * window.innerWidth + "px";
@@ -216,8 +205,8 @@ button {
     el.style.fontSize = Math.random() * 20 + 15 + "px";
     document.body.appendChild(el);
 
-    setTimeout(function () {
-      document.body.removeChild(el);
+    setTimeout(() => {
+      if (el.parentNode) el.parentNode.removeChild(el);
     }, 4000);
   }
 })();
