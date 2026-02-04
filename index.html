@@ -165,11 +165,13 @@ button {
       createEmoji("💜", "confetti");
     }
 
-    setTimeout(function () {
-      window.location.href =
-        "https://wa.me/254719480090?text=" +
-        encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
-    }, 1500);
+var REDIRECT_DELAY = 3500; // milliseconds (3.5 seconds)
+
+setTimeout(function () {
+  window.location.href =
+    "https://wa.me/254719480090?text=" +
+    encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
+}, REDIRECT_DELAY);
   });
 
   function createEmoji(symbol, className) {
@@ -189,3 +191,4 @@ button {
 </script>
 </body>
 </html>
+
