@@ -4,82 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Will You Be My Valentine? 💜</title>
-
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at center, #a855f7, #6b21a8, #3b0764);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  overflow: hidden;
-}
-
-.card {
-  background: #f7f7f7;
-  padding: 40px;
-  border-radius: 25px;
-  border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-  text-align: center;
-  max-width: 420px;
-  width: 90%;
-  animation: popIn 0.9s ease;
-}
-
-@keyframes popIn {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-h1 { color: #ea580c; }
-p { color: #555; margin-bottom: 30px; }
-
-.buttons {
-  position: relative;
-  height: 120px;
-}
-
-button {
-  padding: 14px 30px;
-  font-size: 18px;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-}
-
-#yesBtn {
-  background: #ea580c;
-  color: #fff;
-}
-
-#noBtn {
-  background: #eee;
-  position: absolute;
-  left: 55%;
-}
-
-.message {
-  display: none;
-  font-size: 22px;
-  color: #ea580c;
-  margin-top: 20px;
-}
-
-.heart, .confetti {
-  position: absolute;
-  animation: floatUp 4s linear forwards;
-}
-
-@keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-700px); opacity: 0; }
-}
+  /* ... Your existing styles ... */
+  #continueBtn {
+    display: none;
+    margin-top: 20px;
+    padding: 14px 30px;
+    font-size: 18px;
+    border-radius: 40px;
+    border: none;
+    background: #ea580c;
+    color: white;
+    cursor: pointer;
+  }
 </style>
 </head>
-
 <body>
 <div class="card">
   <h1 id="question">Kitty, will you be my Valentine? 💕</h1>
@@ -93,9 +32,11 @@ button {
   <div class="message" id="message">
     Yay! You’re my Valentine 💘🥰
   </div>
+
+  <button id="continueBtn">Continue 💖</button>
 </div>
 
-<audio id="loveSound" preload="auto" playsinline>
+<audio id="loveSound" preload="auto">
   <source src="every.mp3" type="audio/mpeg">
 </audio>
 
@@ -107,15 +48,13 @@ button {
   var question = document.getElementById("question");
   var subtitle = document.getElementById("subtitle");
   var sound = document.getElementById("loveSound");
-  var card = document.querySelector(".card");
+  var continueBtn = document.getElementById("continueBtn");
 
   var noCount = 0;
   var audioPrimed = false;
 
   function primeAudio() {
-    if (audioPrimed) {
-      return;
-    }
+    if (audioPrimed) return;
     audioPrimed = true;
     sound.play().then(function () {
       sound.pause();
@@ -134,9 +73,12 @@ button {
     var maxX = window.innerWidth - noBtn.offsetWidth - 20;
     var maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
+    var x = Math.random() * maxX;
+    var y = Math.random() * maxY;
+
     noBtn.style.position = "fixed";
-    noBtn.style.left = Math.random() * maxX + "px";
-    noBtn.style.top = Math.random() * maxY + "px";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 
     if (noCount === 3) subtitle.textContent = "Hey… that’s mean 😢";
     if (noCount === 5) subtitle.textContent = "You can’t escape destiny 😏";
@@ -146,6 +88,16 @@ button {
   noBtn.addEventListener("mouseenter", moveNoButton);
   noBtn.addEventListener("touchstart", moveNoButton);
   noBtn.addEventListener("click", moveNoButton);
+
+  function isIosSafari() {
+    return /iP(hone|od|ad)/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+  }
+
+  function redirectToWhatsApp() {
+    window.location.href =
+      "https://wa.me/254719480090?text=" +
+      encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
+  }
 
   yesBtn.addEventListener("click", function () {
     sound.currentTime = 0;
@@ -157,32 +109,32 @@ button {
     noBtn.style.display = "none";
     message.style.display = "block";
 
-    var i;
-    for (i = 0; i < 25; i += 1) {
+    for (var i = 0; i < 25; i += 1) {
       createEmoji("❤️", "heart");
       createEmoji("💜", "confetti");
     }
 
-    sound.onended = function () {
-      showContinueButton();
-    };
+    if (isIosSafari()) {
+      // Show Continue button after audio ends (or immediately if already ended)
+      continueBtn.style.display = "inline-block";
+      continueBtn.onclick = redirectToWhatsApp;
+    } else {
+      // For other browsers, redirect after audio ends or fallback after duration + 1s
+      var redirected = false;
+      sound.onended = function () {
+        if (!redirected) {
+          redirected = true;
+          redirectToWhatsApp();
+        }
+      };
+      setTimeout(function () {
+        if (!redirected) {
+          redirected = true;
+          redirectToWhatsApp();
+        }
+      }, (sound.duration * 1000) + 1000);
+    }
   });
-
-  function showContinueButton() {
-    var btn = document.createElement("button");
-    btn.textContent = "Continue 💬";
-    btn.style.marginTop = "24px";
-    btn.style.background = "#25D366";
-    btn.style.color = "#fff";
-
-    btn.addEventListener("click", function () {
-      window.location.href =
-        "https://wa.me/254719480090?text=" +
-        encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
-    });
-
-    card.appendChild(btn);
-  }
 
   function createEmoji(symbol, className) {
     var el = document.createElement("div");
