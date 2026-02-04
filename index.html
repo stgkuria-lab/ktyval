@@ -2,118 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Will You Be My Valentine? 💜</title>
 <style>
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(circle at center, #a855f7, #6b21a8, #3b0764);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  overflow: hidden;
-}
-
-.card {
-  background: #f7f7f7;
-  padding: 40px;
-  border-radius: 25px;
-  border: 1px solid rgba(0,0,0,0.05);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-  text-align: center;
-  max-width: 420px;
-  width: 90%;
-  animation: popIn 0.9s ease;
-}
-
-@keyframes popIn {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-h1 { color: #ea580c; }
-p { color: #555; margin-bottom: 30px; }
-
-.buttons {
-  position: relative;
-  height: 120px;
-}
-
-button {
-  padding: 14px 30px;
-  font-size: 18px;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-}
-
-#yesBtn {
-  background: #ea580c;
-  color: #fff;
-}
-
-#noBtn {
-  background: #eee;
-  position: absolute;
-  left: 55%;
-}
-
-.message {
-  display: none;
-  font-size: 22px;
-  color: #ea580c;
-  margin-top: 20px;
-}
-
-#continueBtn {
-  display: none;
-  margin-top: 20px;
-  padding: 14px 30px;
-  font-size: 18px;
-  border-radius: 40px;
-  border: none;
-  background: #ea580c;
-  color: white;
-  cursor: pointer;
-}
-
-.heart, .confetti {
-  position: absolute;
-  animation: floatUp 4s linear forwards;
-}
-
-@keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-700px); opacity: 0; }
-}
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, #a855f7, #6b21a8, #3b0764);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow: hidden;
+  }
+  .card {
+    background: #f7f7f7;
+    padding: 40px;
+    border-radius: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    animation: popIn 0.9s ease;
+  }
+  @keyframes popIn {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  h1 { color: #ea580c; }
+  p { color: #555; margin-bottom: 30px; }
+  .buttons {
+    position: relative;
+    height: 120px;
+  }
+  button {
+    padding: 14px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+  }
+  #yesBtn {
+    background: #ea580c;
+    color: #fff;
+  }
+  #noBtn {
+    background: #eee;
+    position: absolute;
+    left: 55%;
+  }
+  .message {
+    display: none;
+    font-size: 22px;
+    color: #ea580c;
+    margin-top: 20px;
+  }
+  #continueBtn {
+    display: none;
+    margin-top: 20px;
+    padding: 14px 30px;
+    font-size: 18px;
+    border-radius: 40px;
+    border: none;
+    background: #ea580c;
+    color: white;
+    cursor: pointer;
+  }
+  .heart, .confetti {
+    position: absolute;
+    animation: floatUp 4s linear forwards;
+  }
+  @keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-700px); opacity: 0; }
+  }
 </style>
 </head>
-
 <body>
-<div class="card">
-  <h1 id="question">Kitty, will you be my Valentine? 💕</h1>
-  <p id="subtitle">You’d make my world brighter 💜</p>
+  <div class="card">
+    <h1 id="question">Kitty, will you be my Valentine? 💕</h1>
+    <p id="subtitle">You’d make my world brighter 💜</p>
 
-  <div class="buttons">
-    <button id="yesBtn">Yes 💜</button>
-    <button id="noBtn">No 🙈</button>
+    <div class="buttons">
+      <button id="yesBtn">Yes 💜</button>
+      <button id="noBtn">No 🙈</button>
+    </div>
+
+    <div class="message" id="message">
+      Yay! You’re my Valentine 💘🥰
+    </div>
+
+    <button id="continueBtn">Continue 💖</button>
   </div>
 
-  <div class="message" id="message">
-    Yay! You’re my Valentine 💘🥰
-  </div>
-
-  <button id="continueBtn">Continue 💖</button>
-</div>
-
-<audio id="loveSound" preload="auto">
-  <source src="easy.mp3" type="audio/mpeg" />
-</audio>
+  <audio id="loveSound" preload="auto" src="myeasy.mp3"></audio>
 
 <script>
-(function () {
+(() => {
   const noBtn = document.getElementById("noBtn");
   const yesBtn = document.getElementById("yesBtn");
   const message = document.getElementById("message");
@@ -125,14 +111,16 @@ button {
   let noCount = 0;
   let audioPrimed = false;
 
-  // Prime audio on first user interaction (for autoplay policy)
+  // Prime audio for mobile autoplay restrictions
   function primeAudio() {
     if (audioPrimed) return;
     audioPrimed = true;
-    sound.play().then(() => {
-      sound.pause();
-      sound.currentTime = 0;
-    }).catch(() => {});
+    sound.play()
+      .then(() => {
+        sound.pause();
+        sound.currentTime = 0;
+      })
+      .catch(() => {});
     document.removeEventListener("touchstart", primeAudio);
     document.removeEventListener("click", primeAudio);
   }
@@ -140,13 +128,16 @@ button {
   document.addEventListener("touchstart", primeAudio);
   document.addEventListener("click", primeAudio);
 
-  // Move the NO button randomly
+  // No button escapes
   function moveNoButton() {
-    noCount++;
+    noCount += 1;
+
     const maxX = window.innerWidth - noBtn.offsetWidth - 20;
     const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
     const x = Math.random() * maxX;
     const y = Math.random() * maxY;
+
     noBtn.style.position = "fixed";
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
@@ -160,10 +151,13 @@ button {
   noBtn.addEventListener("touchstart", moveNoButton);
   noBtn.addEventListener("click", moveNoButton);
 
+  // Detect iOS Safari (for autoplay limitations)
   function isIosSafari() {
-    return /iP(hone|od|ad)/.test(navigator.userAgent) && /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+    const ua = navigator.userAgent;
+    return /iP(hone|od|ad)/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua);
   }
 
+  // Redirect to WhatsApp
   function redirectToWhatsApp() {
     window.location.href =
       "https://wa.me/254719480090?text=" +
@@ -185,14 +179,26 @@ button {
       createEmoji("💜", "confetti");
     }
 
-    // Show Continue button for iOS Safari because auto redirect can be blocked
     if (isIosSafari()) {
       continueBtn.style.display = "inline-block";
       continueBtn.onclick = redirectToWhatsApp;
     } else {
-      // Other browsers: redirect only after audio ended
-      continueBtn.style.display = "none"; // hide continue for non iOS Safari
-      sound.onended = redirectToWhatsApp;
+      let redirected = false;
+      sound.onended = () => {
+        if (!redirected) {
+          redirected = true;
+          redirectToWhatsApp();
+        }
+      };
+
+      // Fallback redirect in case onended doesn't fire (e.g., sound.duration unavailable)
+      const fallbackDelay = (sound.duration && !isNaN(sound.duration)) ? sound.duration * 1000 + 1500 : 7000;
+      setTimeout(() => {
+        if (!redirected) {
+          redirected = true;
+          redirectToWhatsApp();
+        }
+      }, fallbackDelay);
     }
   });
 
@@ -200,13 +206,13 @@ button {
     const el = document.createElement("div");
     el.className = className;
     el.textContent = symbol;
-    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.left = `${Math.random() * window.innerWidth}px`;
     el.style.bottom = "0px";
-    el.style.fontSize = Math.random() * 20 + 15 + "px";
+    el.style.fontSize = `${Math.random() * 20 + 15}px`;
     document.body.appendChild(el);
 
     setTimeout(() => {
-      if (el.parentNode) el.parentNode.removeChild(el);
+      document.body.removeChild(el);
     }, 4000);
   }
 })();
