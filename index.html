@@ -13,7 +13,7 @@ body {
   align-items: center;
   justify-content: center;
   background: radial-gradient(circle at center, #a855f7, #6b21a8, #3b0764);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow: hidden;
 }
 
@@ -21,18 +21,16 @@ body {
   background: #f7f7f7;
   padding: 40px;
   border-radius: 25px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0,0,0,0.05);
   box-shadow: 0 25px 50px rgba(0,0,0,0.25);
   text-align: center;
   max-width: 420px;
   width: 90%;
-  animation: popIn 1s ease;
-  position: relative;
-  z-index: 10;
+  animation: popIn 0.9s ease;
 }
 
 @keyframes popIn {
-  from { transform: scale(0.8); opacity: 0; }
+  from { transform: scale(0.85); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
 
@@ -54,7 +52,7 @@ button {
 
 #yesBtn {
   background: #ea580c;
-  color: white;
+  color: #fff;
 }
 
 #noBtn {
@@ -66,14 +64,12 @@ button {
 .message {
   display: none;
   font-size: 22px;
-  color: #e63946;
+  color: #ea580c;
   margin-top: 20px;
 }
 
-/* Hearts & Confetti */
 .heart, .confetti {
   position: absolute;
-  z-index: 9999;
   animation: floatUp 4s linear forwards;
 }
 
@@ -100,93 +96,96 @@ button {
 </div>
 
 <audio id="loveSound" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/foley/kiss.ogg" type="audio/ogg" />
-  <source src="https://actions.google.com/sounds/v1/foley/kiss.mp3" type="audio/mpeg" />
+  <source src="every.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-document.documentElement.requestFullscreen?.().catch(()=>{});
+(function () {
+  var noBtn = document.getElementById("noBtn");
+  var yesBtn = document.getElementById("yesBtn");
+  var message = document.getElementById("message");
+  var question = document.getElementById("question");
+  var subtitle = document.getElementById("subtitle");
+  var sound = document.getElementById("loveSound");
 
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const message = document.getElementById("message");
-const question = document.getElementById("question");
-const subtitle = document.getElementById("subtitle");
-const sound = document.getElementById("loveSound");
+  var noCount = 0;
+  var audioPrimed = false;
 
-let noCount = 0;
-
-function escapeNo() {
-  noCount++;
-
-  const x = Math.random() * (window.innerWidth - 150);
-  const y = Math.random() * (window.innerHeight - 100);
-
-  noBtn.style.position = "fixed";
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-
-  navigator.vibrate?.(80);
-
-  if (noCount === 3) subtitle.textContent = "Hey… that’s mean 😢";
-  if (noCount === 5) subtitle.textContent = "You can’t escape destiny 😏";
-  if (noCount === 7) subtitle.textContent = "Just say YES already 😍";
-}
-
-noBtn.addEventListener("mouseover", escapeNo);
-noBtn.addEventListener("click", escapeNo);
-noBtn.addEventListener("touchstart", escapeNo);
-
-yesBtn.addEventListener("click", function () {
-  sound.currentTime = 0;
-  sound.play().catch(() => {});
-
-  question.textContent = "You’re my Valentine 💞";
-  subtitle.style.display = "none";
-  yesBtn.style.display = "none";
-  noBtn.style.display = "none";
-  message.style.display = "block";
-
-  for (let i = 0; i < 30; i++) {
-    createHeart();
-    createConfetti();
+  function primeAudio() {
+    if (audioPrimed) {
+      return;
+    }
+    audioPrimed = true;
+    sound.play().then(function () {
+      sound.pause();
+      sound.currentTime = 0;
+    }).catch(function () {});
+    document.removeEventListener("touchstart", primeAudio);
+    document.removeEventListener("click", primeAudio);
   }
 
-  setTimeout(() => {
-    window.location.href =
-      "https://wa.me/254719480090?text=" +
-      encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
-  }, 1800);
-});
+  document.addEventListener("touchstart", primeAudio);
+  document.addEventListener("click", primeAudio);
 
-function createHeart() {
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.textContent = "❤️";
-  h.style.left = Math.random() * window.innerWidth + "px";
-  h.style.bottom = "0px";
-  h.style.fontSize = Math.random() * 25 + 15 + "px";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 4000);
-}
+  function moveNoButton() {
+    noCount += 1;
 
-function createConfetti() {
-  const c = document.createElement("div");
-  c.className = "confetti";
-  c.textContent = "💜";
-  c.style.left = Math.random() * window.innerWidth + "px";
-  c.style.bottom = "0px";
-  c.style.fontSize = Math.random() * 20 + 10 + "px";
-  document.body.appendChild(c);
-  setTimeout(() => c.remove(), 4000);
-}
+    var maxX = window.innerWidth - noBtn.offsetWidth - 20;
+    var maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+    var x = Math.random() * maxX;
+    var y = Math.random() * maxY;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+
+    if (noCount === 3) subtitle.textContent = "Hey… that’s mean 😢";
+    if (noCount === 5) subtitle.textContent = "You can’t escape destiny 😏";
+    if (noCount === 7) subtitle.textContent = "Just say YES already 😍";
+  }
+
+  noBtn.addEventListener("mouseenter", moveNoButton);
+  noBtn.addEventListener("touchstart", moveNoButton);
+  noBtn.addEventListener("click", moveNoButton);
+
+  yesBtn.addEventListener("click", function () {
+    sound.currentTime = 0;
+    sound.play().catch(function () {});
+
+    question.textContent = "You’re my Valentine 💞";
+    subtitle.style.display = "none";
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+    message.style.display = "block";
+
+    var i;
+    for (i = 0; i < 25; i += 1) {
+      createEmoji("❤️", "heart");
+      createEmoji("💜", "confetti");
+    }
+
+    setTimeout(function () {
+      window.location.href =
+        "https://wa.me/254719480090?text=" +
+        encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
+    }, 1500);
+  });
+
+  function createEmoji(symbol, className) {
+    var el = document.createElement("div");
+    el.className = className;
+    el.textContent = symbol;
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.bottom = "0px";
+    el.style.fontSize = Math.random() * 20 + 15 + "px";
+    document.body.appendChild(el);
+
+    setTimeout(function () {
+      document.body.removeChild(el);
+    }, 4000);
+  }
+})();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
