@@ -95,7 +95,7 @@ button {
   </div>
 </div>
 
-<audio id="loveSound" preload="auto">
+<audio id="loveSound" preload="auto" playsinline>
   <source src="every.mp3" type="audio/mpeg">
 </audio>
 
@@ -107,6 +107,7 @@ button {
   var question = document.getElementById("question");
   var subtitle = document.getElementById("subtitle");
   var sound = document.getElementById("loveSound");
+  var card = document.querySelector(".card");
 
   var noCount = 0;
   var audioPrimed = false;
@@ -133,12 +134,9 @@ button {
     var maxX = window.innerWidth - noBtn.offsetWidth - 20;
     var maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
-    var x = Math.random() * maxX;
-    var y = Math.random() * maxY;
-
     noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
 
     if (noCount === 3) subtitle.textContent = "Hey… that’s mean 😢";
     if (noCount === 5) subtitle.textContent = "You can’t escape destiny 😏";
@@ -165,12 +163,26 @@ button {
       createEmoji("💜", "confetti");
     }
 
-sound.onended = function () {
-  window.location.href =
-    "https://wa.me/254719480090?text=" +
-    encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
-};
+    sound.onended = function () {
+      showContinueButton();
+    };
   });
+
+  function showContinueButton() {
+    var btn = document.createElement("button");
+    btn.textContent = "Continue 💬";
+    btn.style.marginTop = "24px";
+    btn.style.background = "#25D366";
+    btn.style.color = "#fff";
+
+    btn.addEventListener("click", function () {
+      window.location.href =
+        "https://wa.me/254719480090?text=" +
+        encodeURIComponent("Hey Pookie ❤️ I clicked YES 😘💖");
+    });
+
+    card.appendChild(btn);
+  }
 
   function createEmoji(symbol, className) {
     var el = document.createElement("div");
@@ -189,7 +201,3 @@ sound.onended = function () {
 </script>
 </body>
 </html>
-
-
-
-
